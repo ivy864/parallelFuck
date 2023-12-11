@@ -10,8 +10,13 @@ class Tape {
 
     private ArrayList<Integer> tape;
     private int pointer;
+    private static Tape theInstance;
+    
+    public static Tape instance() {
+        return theInstance;
+    }
 
-    Tape() { 
+    private Tape() { 
         init();
     }
 
@@ -52,9 +57,12 @@ class Tape {
             throw new IllegalValueException("Can't decrement value at pointer when value is 0!");
         }
     }
-    int getValue() {
-        return tape.get(pointer);
+
+    void printChar() {
+        int val = tape.get(pointer);
+        Interpreter.printChar("" + ((char) val));
     }
+
     void setValue(int val) {
         tape.set(pointer, val);
     }
