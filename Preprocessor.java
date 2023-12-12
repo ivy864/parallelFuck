@@ -1,6 +1,10 @@
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Scanner;
 
 class Preprocessor {
+    
+    private Hashtable<String, Integer> instructions;
 
     public static class IllegalLoopException extends Exception {
         public IllegalLoopException(String e) {
@@ -10,7 +14,18 @@ class Preprocessor {
 
     static Preprocessor theInstance;
 
-    private Preprocessor() {}
+    private Preprocessor() {
+        instructions = new Hashtable<String, Integer>();
+
+        this.instructions.put(">", 0);
+        this.instructions.put("<", 0);
+        this.instructions.put("+", 0);
+        this.instructions.put("-", 0);
+        this.instructions.put("[", 1);
+        this.instructions.put("]", -1);
+        this.instructions.put(".", 0);
+        this.instructions.put(",", 0);
+    }
 
     public static Preprocessor instance() {
         if (theInstance == null) {
@@ -20,7 +35,27 @@ class Preprocessor {
     }
 
 
-    public ArrayList<Character> getProgram() throws IllegalLoopException {
-        return new ArrayList<Character>();
+    public ArrayList<Character> getProgram(Scanner s) throws IllegalLoopException {
+        ArrayList<Character> program = new ArrayList<Character>();
+        
+        String inst;
+        s.useDelimiter("");
+        int loops = 0;
+        while (s.hasNext()) {
+            inst = s.next();
+            if (this.instructions.get(inst) != null) {
+                program.add(inst.charAt(0));
+                loops += this.instructions.get(inst);
+            }
+        }
+
+        if (loops < 0) {
+            throw new IllegalLoopException("Loop ended but not started!");
+        }
+        else if (loops > 0) {
+            throw new IllegalLoopException("Loop started but not ended!");
+        }
+
+        return program;
     }
 }

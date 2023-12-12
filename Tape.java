@@ -2,22 +2,20 @@ import java.util.ArrayList;
 
 class Tape {
 
-    public static class IllegalValueException extends Exception {
-        public IllegalValueException(String e) {
-            super(e);
-        }
-    }
-
     private ArrayList<Integer> tape;
     private int pointer;
     private static Tape theInstance;
     
     public static Tape instance() {
+        if (theInstance == null) {
+            theInstance = new Tape();
+        }
+
         return theInstance;
     }
 
     private Tape() { 
-        init();
+        this.init();
     }
 
     private void init() {
@@ -29,13 +27,14 @@ class Tape {
 
     void incrementPointer() {
         pointer += 1;
-        if (tape.size() - 1 != pointer) {
+
+        if (tape.size() == pointer) {
             tape.add(0);
         }
     }
 
     void decrementPointer() {
-        if (pointer != 0) {
+        if (pointer > 0) {
             pointer -= 1;
         }
         else {
@@ -47,23 +46,21 @@ class Tape {
         int val = tape.get(pointer);
         tape.set(pointer, val + 1);
     }
-    void decrementValue() throws IllegalValueException {
+    void decrementValue() {
         int val = tape.get(pointer);
-
-        if (val != 0) {
-            tape.set(pointer, val - 1);
-        }
-        else {
-            throw new IllegalValueException("Can't decrement value at pointer when value is 0!");
-        }
+        tape.set(pointer, val - 1);
     }
 
-    void printChar() {
+    char getChar() {
         int val = tape.get(pointer);
-        Interpreter.printChar("" + ((char) val));
+
+        return ((char) val);
+    }
+    int getVal() {
+        return tape.get(pointer);
     }
 
-    void setValue(int val) {
-        tape.set(pointer, val);
+    void putChar(char val) {
+        tape.set(pointer, (int)val);
     }
 }
