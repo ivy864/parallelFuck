@@ -9,7 +9,13 @@ class Interpreter {
         
         while (s.hasNext()) {
             in = s.next();
-            instHandler.handleInstruction(in); 
+            try {
+                instHandler.handleInstruction(in); 
+            }
+            catch (Tape.IllegalValueException e) {
+                e.printStackTrace();
+                return;
+            }
         }
 
         s.close();
