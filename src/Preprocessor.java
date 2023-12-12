@@ -25,6 +25,17 @@ class Preprocessor {
         this.instructions.put("]", -1);
         this.instructions.put(".", 0);
         this.instructions.put(",", 0);
+
+        // new things
+        this.instructions.put("(", 2);
+        this.instructions.put(")", -2);
+        this.instructions.put("_", 0);
+        
+
+        this.instructions.put("&", 0);
+        this.instructions.put("^", 0);
+        this.instructions.put("*", 0);
+        this.instructions.put("%", 0);
     }
 
     public static Preprocessor instance() {
