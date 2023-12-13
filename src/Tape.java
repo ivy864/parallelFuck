@@ -6,6 +6,7 @@ class Tape implements Runnable{
 
     private ArrayList<Integer> tape;
     private ArrayList<Character> program;
+    private ArrayList<Tape> threads;
     private int pointer;
     private Scanner s;
     //private static Tape theInstance;
@@ -71,11 +72,20 @@ class Tape implements Runnable{
         this.s = s;
     }
 
+    Tape () {
+        this.init();
+        this.program = new ArrayList<Character>();
+    }
+
     private void init() {
         this.tape = new ArrayList<Integer>();
         this.pointer = 0;
 
         this.tape.add(0);
+    }
+
+    public void addInstruction(char instruction) {
+        this.program.add(instruction);
     }
 
     void incrementPointer() {
