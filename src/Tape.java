@@ -6,7 +6,7 @@ class Tape implements Runnable{
 
     private ArrayList<Integer> tape;
     private ArrayList<Character> program;
-    private ArrayList<Tape> threads;
+    private ArrayList<Thread> threads;
     private int pointer;
     private Scanner s;
     //private static Tape theInstance;
@@ -86,6 +86,9 @@ class Tape implements Runnable{
 
     public void addInstruction(char instruction) {
         this.program.add(instruction);
+    }
+    public void addThread(Tape tape) {
+        this.threads.add(new Thread(tape));
     }
 
     void incrementPointer() {

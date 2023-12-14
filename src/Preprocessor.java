@@ -69,6 +69,7 @@ class Preprocessor {
 
                 if (inst.equals("(")) {
                     Tape newTape = new Tape();
+                    tapeStack.peek().addThread(newTape);
                     tapeStack.push(newTape);
                 }
                 else if (inst.equals(")")) {
