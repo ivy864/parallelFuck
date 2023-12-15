@@ -1,14 +1,17 @@
 import java.util.ArrayList;
+import java.util.EmptyStackException;
+import java.util.Hashtable;
 import java.util.Scanner;
 import java.util.Stack;
 
-class Tape implements Runnable{
+class Tape implements Runnable {
 
     private ArrayList<Integer> tape;
     private ArrayList<Character> program;
-    private ArrayList<Thread> threads;
+    private Hashtable<Integer, Tape> tapes;
+    private Stack<Thread> threads;
     private int pointer;
-    private Scanner s;
+    static Scanner s;
     //private static Tape theInstance;
 
         
@@ -24,7 +27,7 @@ class Tape implements Runnable{
     */
 
     public void run() {
-        s.useDelimiter("");
+        Interpreter.s.useDelimiter("");
 
         int pointer = 0;
         
@@ -59,7 +62,25 @@ class Tape implements Runnable{
                 System.out.print("" + this.getChar());
             }
             else if (instruction == ',') {
-                this.putChar(s.next().charAt(0)); // bad way 2 do this prolly
+                this.putChar(Interpreter.s.next().charAt(0)); // bad way 2 do this prolly
+            }
+
+            else if (instruction == '(') {
+                Thread thread = new Thread(this.tapes.get(pointer));
+                threads.push(thread);
+                thread.start();
+
+            }
+            else if (instruction == '_') {
+                try {
+                    threads.pop().join();
+                }
+                catch (EmptyStackException e) {
+                    e.printStackTrace();
+                }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             pointer++;
@@ -69,7 +90,6 @@ class Tape implements Runnable{
     Tape(ArrayList<Character> program, Scanner s) { 
         this.init();
         this.program = program;
-        this.s = s;
     }
 
     Tape () {
@@ -79,6 +99,8 @@ class Tape implements Runnable{
 
     private void init() {
         this.tape = new ArrayList<Integer>();
+        this.tapes = new Hashtable<Integer, Tape>();
+        this.threads = new Stack<Thread>();
         this.pointer = 0;
 
         this.tape.add(0);
@@ -88,7 +110,7 @@ class Tape implements Runnable{
         this.program.add(instruction);
     }
     public void addThread(Tape tape) {
-        this.threads.add(new Thread(tape));
+        this.tapes.put(this.program.size() - 1, tape);
     }
 
     void incrementPointer() {
