@@ -1,11 +1,10 @@
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Stack;
 
 class Interpreter {
+    static Scanner s;
+
     public static void main (String args[]) {
-        Scanner s;
 
         if (args.length != 1) {
             System.out.println("Usage: Interpreter program.bf");
@@ -24,15 +23,17 @@ class Interpreter {
             return;
         }
         
-        ArrayList<Character> program;
+        Tape main;
         try {
-            program = Preprocessor.instance().getProgram(s);
+            main = Preprocessor.instance().getProgram(s);
         }
         catch(Exception e) {
             e.printStackTrace();
             return;
         }
         
+        main.run();
+
         s.close();
 
         s = new Scanner(System.in);
