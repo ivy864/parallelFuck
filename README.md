@@ -2,7 +2,7 @@
 
 A programming language derivative of [BrainFuck](https://en.wikipedia.org/wiki/Brainfuck) with the addition of shared state and parallelization
 
-My interpreter _should_ be fully functional with the exception of input in within threads. idk whats up with that but I'm gonna blame all my problems on java.
+My interpreter _should_ be fully functional with the exception of input while in a thread. idk whats up with that but I'm gonna blame all my problems on java.
 
 ## New Operators
 
