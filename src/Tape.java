@@ -11,6 +11,11 @@ class Tape implements Runnable {
             super(s);
         }
     }
+    public class ThreadException extends RuntimeException {
+        ThreadException (String s) {
+            super(s);
+        }
+    }
 
     private ArrayList<Integer> tape;
     private ArrayList<Character> program;
@@ -83,10 +88,11 @@ class Tape implements Runnable {
                     threads.pop().join();
                 }
                 catch (EmptyStackException e) {
-                    e.printStackTrace();
+                    throw new ThreadException("There is no thread to join on!");
                 }
                 catch (InterruptedException e) {
                     e.printStackTrace();
+                    throw new ThreadException("idk what happened");
                 }
             }
             else if (instruction == '&') {
