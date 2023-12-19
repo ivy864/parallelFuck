@@ -6,12 +6,19 @@ import java.util.Stack;
 
 class Tape implements Runnable {
 
+    public class TransferException extends RuntimeException {
+        TransferException (String s){
+            super(s);
+        }
+    }
+
     private ArrayList<Integer> tape;
     private ArrayList<Character> program;
     private Hashtable<Integer, Tape> tapes;
     private Stack<Thread> threads;
     private int pointer;
     static Scanner s;
+    private int transferCell;
     //private static Tape theInstance;
 
         
@@ -28,7 +35,7 @@ class Tape implements Runnable {
 
     public void run() {
         Interpreter.s.useDelimiter("");
-
+        UniversalTape universalTape = UniversalTape.instance();
         int pointer = 0;
         
         Stack<Integer> loops = new Stack<Integer>();
@@ -82,6 +89,36 @@ class Tape implements Runnable {
                     e.printStackTrace();
                 }
             }
+            else if (instruction == '&') {
+                this.transferCell = this.getVal();
+                this.setVal(0);
+            }
+            else if (instruction == '^') {
+                if (transferCell == -1) {
+                    throw new TransferException(
+                        "Cannot send null to universal tape!");
+                }
+                universalTape.setValue(this.getVal(), 
+                    this.transferCell); 
+                this.transferCell = -1;
+            }
+            else if (instruction == '*') {
+                if (transferCell == -1) {
+                    throw new TransferException(
+                        "Cannt get 'null' from transfer cell.");
+                }
+                this.setVal(transferCell);
+                transferCell = -1;
+            }
+            else if (instruction == '%') {
+                int val = universalTape.getValue(this.getVal());
+                if (val == -1) {
+                    throw new TransferException("Value at position " + 
+                    this.getVal() + " of universal tape is null!");
+                }
+
+                this.transferCell = val;
+            }
 
             pointer++;
         }
@@ -102,6 +139,7 @@ class Tape implements Runnable {
         this.tapes = new Hashtable<Integer, Tape>();
         this.threads = new Stack<Thread>();
         this.pointer = 0;
+        this.transferCell = -1;
 
         this.tape.add(0);
     }
@@ -146,6 +184,9 @@ class Tape implements Runnable {
     }
     int getVal() {
         return tape.get(pointer);
+    }
+    private void setVal(int val) {
+        tape.set(pointer, val);
     }
 
     void putChar(char val) {

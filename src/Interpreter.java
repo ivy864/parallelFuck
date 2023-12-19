@@ -32,10 +32,10 @@ class Interpreter {
             return;
         }
         
+        s.close();
+        s = new Scanner(System.in);
         main.run();
 
-        s.close();
 
-        s = new Scanner(System.in);
     }
 }
