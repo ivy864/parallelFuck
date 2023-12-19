@@ -6,7 +6,7 @@ My interpreter _should_ be fully functional with the exception of input while in
 
 ## New Operators
 
-ParallelFuck adds 7 (?) new operators to brainfuck
+ParallelFuck adds 7 new operators to brainfuck
 
 |Operator|Description|
 |:-|:-|
@@ -15,13 +15,13 @@ ParallelFuck adds 7 (?) new operators to brainfuck
 |_|join on last thread created|
 |&|send value at pointer to transfer cell| 
 |^|put value in transfer cell at position n of universal tape|
-|*|replace value at pointer with value in transfer cell|
 |%|put value at position n of the universal tape into transfer cell|
+|*|replace value at pointer with value in transfer cell|
 
 ## Shared Memory 
 
 Memory in ParallelFuck is shared through a universal tape. The universal tape 
-cannot be accessed directly, rather values are sent to and retrieved from the 
+cannot be accessed directly. Values are sent to and retrieved from the 
 universal tape through the 'transfer cell'. Values can be placed in the transfer 
 cell, and then sent to a cell in the universal tape. To access values in the 
 universal tape, the value must be first staged in the transfer cell, and then
@@ -33,13 +33,15 @@ local tape which the pointer is pointing to) will be used as the index.
 ### An example program using the universal tape
 
 ```
-++      set value of the active cell of the local tape to 2
+++
 &       put '2' into transfer cell. the value of the active cell is now 0
 ^       put '2' at position 0 of universal tape. the value in the transfer cell is now null 
-+++     set value of active cell to 3
++++ 
+
 &       put '3' into transfer cell. the value of the active cell is now 0
+
 +^      set value of active cell to 1. put '3' at position 1 of universal tape
--       set value of active cell to 0.
+-       set value at pointer to 0
 %       put value at position 0 of universal tape (2) into transfer cell
 *       replace value of active cell with value of transfer cell. transfer cell is now null
 .       outputs '2'
@@ -106,7 +108,7 @@ they are then outputted
 ```
 (                   start new thread
   +++++++++
-  [                 set value to 72 (H)
+  [                 set value to 72
     >++++++++
     <-
   ]
@@ -119,7 +121,7 @@ they are then outputted
     >++++++++++
     <-
   ]
-  >+++++            set value to 105 (i)
+  >+++++            set value to 105
   &
   +^                put 105 in position 1 of universal tape
 )
@@ -129,15 +131,15 @@ they are then outputted
   >++++++
   <-
 ]
->+++                set value to 33 (!)
+>+++                set value to 33
 
 _                   wait for second thread to finish
 _                   wait for first thread to finish
 
->%*.                get value at position 0 of universal tape and print it (H)
+>%*.                get value at position 0 of universal tape and print it
 >+
-%*.                 get value at position 1 of universal tape and print it (i)
-<<.                 go back 2 cells and print (!)
+%*.                 get value at position 1 of universal tape and print it
+<<.                 go back 2 cells and print
 ```
 
 ## Compatibility with BrainFuck
