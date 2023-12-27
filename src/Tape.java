@@ -109,13 +109,18 @@ class Tape implements Runnable {
                 this.transferCell = -1;
             }
             else if (instruction == '*') {
-                if (transferCell == -1) {
-                    throw new TransferException(
-                        "Cannt get 'null' from transfer cell.");
+                int cell = this.getVal();
+                int val; 
+                try {
+                    val = UniversalTape.instance().getValue(cell);
                 }
-                this.setVal(transferCell);
-                transferCell = -1;
+                catch (NullPointerException e) {
+                    throw new TransferException("Value at position " + cell + " of universal tape is null!");
+                }
+                
+                this.setVal(val);
             }
+            /*
             else if (instruction == '%') {
                 int val = universalTape.getValue(this.getVal());
                 if (val == -1) {
@@ -125,6 +130,7 @@ class Tape implements Runnable {
 
                 this.transferCell = val;
             }
+            */
 
             pointer++;
         }
