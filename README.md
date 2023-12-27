@@ -6,7 +6,7 @@ My interpreter _should_ be fully functional with the exception of input while in
 
 ## New Operators
 
-ParallelFuck adds 7 new operators to brainfuck
+ParallelFuck adds 6 new operators to brainfuck
 
 |Operator|Description|
 |:-|:-|
@@ -15,8 +15,7 @@ ParallelFuck adds 7 new operators to brainfuck
 |_|join on last thread created|
 |&|send value at pointer to transfer cell| 
 |^|put value in transfer cell at position n of universal tape|
-|%|put value at position n of the universal tape into transfer cell|
-|*|replace value at pointer with value in transfer cell|
+|*|replace value at pointer with value at position n of universal tape|
 
 ## Shared Memory 
 
@@ -30,7 +29,7 @@ placed into the current active cell of the local tape.
 When accessing the universal tape, the value of the active cell (the cell in the 
 local tape which the pointer is pointing to) will be used as the index.
 
-### An example program using the universal tape
+### Universal tape example
 
 ```
 ++
@@ -42,9 +41,7 @@ local tape which the pointer is pointing to) will be used as the index.
 
 +^      set value of active cell to 1. put '3' at position 1 of universal tape
 -       set value at pointer to 0
-%       put value at position 0 of universal tape (2) into transfer cell
-*       replace value of active cell with value of transfer cell. transfer cell is now null
-.       outputs '2'
+*       replace value of active cell with the value at position 0 of the universal tape
 ```
 
 ## Parallelization
@@ -136,13 +133,13 @@ they are then outputted
 _                   wait for second thread to finish
 _                   wait for first thread to finish
 
->%*.                get value at position 0 of universal tape and print it
+>*.                get value at position 0 of universal tape and print it
 >+
-%*.                 get value at position 1 of universal tape and print it
+*.                 get value at position 1 of universal tape and print it
 <<.                 go back 2 cells and print
 ```
 
 ## Compatibility with BrainFuck
 
-All BrainFuck programs should be fully compatible with ParallelFuck, although comments
-which use include characters used for the new operators will cause problems.
+ParallelFuck is a superset of brainfuck; all brainfuck programs should be compatible with ParallelFuck, 
+assuming they don't parallelfuck's unique instructions in comments.
